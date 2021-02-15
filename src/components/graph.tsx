@@ -14,10 +14,7 @@ const Graph = (props: { width: number, height: number }) => {
 
     useEffect(() => {
         const dataset1 = generateTestData();
-        console.log(dataset1);
-        // const dataset2 = generateTestData(false);
         renderGraph([dataset1]);
-        // renderGraph([dataset1, dataset2]);
     });
 
     const generateTestData = (): { x: number, y: number }[] => {
@@ -25,7 +22,6 @@ const Graph = (props: { width: number, height: number }) => {
         // Test with a = 0, b = 1, over the range of
         // const constants = { a:0, b: 0 };
         const constants = { a:-2, b: 0 };
-        // const constants = { a:-1, b: 1 };
         const points: { x: number, y: number }[] = [];
         for(let x = -3; x <= 3; x+=0.001) {
             let pointX = parseFloat(x.toPrecision(10));
@@ -44,7 +40,6 @@ const Graph = (props: { width: number, height: number }) => {
         drawXAxis(svg);
         drawYAxis(svg);
         datasets.forEach(ds => {
-            // addLine(svg, ds);
             addPoints(svg, ds);
         });
     }
@@ -62,24 +57,6 @@ const Graph = (props: { width: number, height: number }) => {
             .attr("r", 1);
     }
 
-    const addLine = (svg: any, data: {x: number, y: number}[]) => {
-        const l = length(line(data));
-        svg
-            .append("path")
-            .datum(data)
-            .attr("fill", "none")
-            .attr("stroke", "black")
-            .attr("stroke-width", 2.5)
-            .attr("stroke-linejoin", "round")
-            .attr("stroke-linecap", "round")
-            .attr("stroke-dasharray", `0,${l}`)
-            .attr("d", line)
-            .transition()
-            .duration(2500)
-            .ease(d3.easeLinear)
-            .attr("stroke-dasharray", `${l},${l}`);
-    }
-
     const drawXAxis = (svg: any) => {
         svg.append("g")
             .attr("transform", `translate(0,${height / 2})`)
@@ -90,16 +67,6 @@ const Graph = (props: { width: number, height: number }) => {
             .call(g => g.selectAll(".tick line").clone()
                 .attr("y2", height)
                 .attr("stroke-opacity", 0.1))
-    }
-
-    const line = d3
-        .line()
-        .curve(d3.curveCatmullRom)
-        .x(d => x(d.x))
-        .y(d => y(d.y));
-    const length = (path: any) => {
-        // @ts-ignore
-        return d3.create("svg:path").attr("d", path).node().getTotalLength();
     }
     const x = d3.scaleLinear().domain([-(width / domainMultiplier), width / domainMultiplier]).range([0, width])
     const y = d3.scaleLinear().domain([(height / domainMultiplier), -(height / domainMultiplier)]).range([0, height])
