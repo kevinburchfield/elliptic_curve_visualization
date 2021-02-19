@@ -11,6 +11,7 @@ const Graph = (props: { width: number, height: number }) => {
 
     // Graph attributes
     const domainMultiplier = 125;
+    const margin = 30;
 
     useEffect(() => {
         const dataset1 = generateTestData();
@@ -52,8 +53,8 @@ const Graph = (props: { width: number, height: number }) => {
             .selectAll("circle")
             .data(data)
             .join("circle")
-            .attr("cx", d => x(d.x))
-            .attr("cy", d => y(d.y))
+            .attr("cx", (d: any) => x(d.x))
+            .attr("cy", (d: any) => y(d.y))
             .attr("r", 1);
     }
 
@@ -61,24 +62,28 @@ const Graph = (props: { width: number, height: number }) => {
         svg.append("g")
             .attr("transform", `translate(0,${height / 2})`)
             .call(d3.axisBottom(x).ticks(width / 150))
-            .call(g => g.selectAll(".tick line").clone()
+            .call((g: any) => g.selectAll(".tick line").clone()
                 .attr("y2", -height)
                 .attr("stroke-opacity", 0.1))
-            .call(g => g.selectAll(".tick line").clone()
+            .call((g: any) => g.selectAll(".tick line").clone()
                 .attr("y2", height)
                 .attr("stroke-opacity", 0.1))
     }
-    const x = d3.scaleLinear().domain([-(width / domainMultiplier), width / domainMultiplier]).range([0, width])
-    const y = d3.scaleLinear().domain([(height / domainMultiplier), -(height / domainMultiplier)]).range([0, height])
+    const x = d3.scaleLinear()
+        .domain([-(width / domainMultiplier), width / domainMultiplier])
+        .range([margin, width - margin]);
+    const y = d3.scaleLinear()
+        .domain([(height / domainMultiplier), -(height / domainMultiplier)])
+        .range([margin, height - margin]);
 
     const drawYAxis = (svg: any) => {
         svg.append("g")
             .attr("transform", `translate(${width / 2}, 0)`)
             .call(d3.axisLeft(y).ticks(height / 150))
-            .call(g => g.selectAll(".tick line").clone()
+            .call((g: any) => g.selectAll(".tick line").clone()
                 .attr("x2", width)
                 .attr("stroke-opacity", 0.1))
-            .call(g => g.selectAll(".tick line").clone()
+            .call((g: any) => g.selectAll(".tick line").clone()
                 .attr("x2", -width)
                 .attr("stroke-opacity", 0.1))
     }
